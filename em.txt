@@ -1,0 +1,1164 @@
+#include<stdlib.h>
+#include<GL/glut.h>
+#include<stdio.h>
+#include<math.h>
+GLfloat angle = 0.0, i = 0.05;
+#define INIT_VIEW_X 0.0    //Define initial camera position and viewing window values
+#define INIT_VIEW_Y 0.0
+#define INIT_VIEW_Z -4.5
+#define VIEW_LEFT -2.0
+#define VIEW_RIGHT 2.0
+#define VIEW_BOTTOM -2.0
+#define VIEW_TOP 2.0
+#define VIEW_NEAR 1.0
+#define VIEW_FAR 200.0
+GLfloat AmbientLight[] = { 0.3,0.3,0.3,1.0 };                  //Initialization values for lighting
+GLfloat DiffuseLight[] = { 0.8,0.8,0.8,1.0 };
+GLfloat SpecularLight[] = { 1.0,1.0,1.0,1.0 };
+GLfloat SpecRef[] = { 0.7,0.7,0.7,1.0 };
+GLfloat LightPos[] = { -50.0,50.0,100.0,1.0 };
+GLint Shine = 128;
+GLint walkX = 0, walkY = 0, lookX = 0, lookY = 0;
+GLint world = 1, oldX = -1, oldY = -1;
+GLint doll = -1;
+void topbutton();
+void teethS();
+void pupilright();
+void pupilleft();
+void neckring();
+void legright();
+void legleft();
+void head();
+void hatring();
+void handrightS();
+void handleftS();
+void footright();
+void footleft();
+void eyeright();
+void eyeleft();
+void bellyCoatbottom();
+void BellyCoat();
+void armrightS();
+void armleftS();
+void eyerightSM()
+{
+    //function for the right eye
+    glPushMatrix();
+    glTranslatef(.17, 1.1, .75);     //Specify the coordinates for the right eye
+    glRotatef(-45, 0, 0, 1);
+    glScalef(.6, .6, .6);            //Specify the size of the right eye
+         //Specify the color of the eye
+    gluSphere(gluNewQuadric(), .3, 100, 100);
+    glPopMatrix();
+}
+void eyeleftSM()
+{
+    glPushMatrix();
+    glTranslatef(-.17, 1.1, .75);     //Specify the position for the left eye
+    glRotatef(45, 0, 0, 1);
+    glScalef(.6, 0.6, 0.6);
+
+    gluSphere(gluNewQuadric(), .3, 100, 100);
+    glPopMatrix();
+}
+
+
+void mouthSM()
+{
+    glPushMatrix();
+    glTranslatef(0, .78, .74);
+    glScalef(.55, .55, .1);
+    glColor3f(0.0, 0.0, 0.0);
+    gluSphere(gluNewQuadric(), .4, 100, 100);
+    glPopMatrix();
+}
+
+
+void eyebrowleftSM()
+{
+    glPushMatrix();
+    glTranslatef(-.07, 1.16, .97);;
+    glRotatef(90, 0, 1, 0);
+    glRotatef(180, 1, 0, 0);
+    glColor3f(0.0, 0.0, 0.0);
+    gluCylinder(gluNewQuadric(), .05, .01, .3, 4, 6);
+    glPopMatrix();
+}
+void teethSM()
+{
+    glPushMatrix();
+    glColor3f(1.0, 1.0, 1.0);
+    glTranslatef(-.08, .72, .76);
+    glTranslatef(.055, 0, .005);
+    glutSolidCube(.035);
+    glTranslatef(.055, 0, 0);
+    glutSolidCube(.035);
+    glPopMatrix();
+}
+
+void eyebrowrightSM()
+{
+    glPushMatrix();
+    glTranslatef(.3, 1.18, .97);
+    glRotatef(270, 0, 1, 0);
+    glRotatef(0, 1, 0, 0);
+    gluCylinder(gluNewQuadric(), .05, .01, .3, 4, 6);
+    glPopMatrix();
+}
+
+
+void pupilleftSM()
+{
+    glPushMatrix();
+    glTranslatef(-.14, 1.1, .88);
+    glScalef(.65, .65, .65);
+    gluSphere(gluNewQuadric(), .1, 100, 100);
+    glPopMatrix();
+}
+
+void pupilrightSM()
+{
+    glPushMatrix();
+    glTranslatef(.25, 1.1, .88);
+    glScalef(.65, .65, .65);
+    gluSphere(gluNewQuadric(), .1, 100, 100);
+    glPopMatrix();
+}
+
+
+void DisplaySM()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);//Clear the window
+    glColor3ub(50, 50, 150);//Change the draw color to slate blue
+    glPushMatrix();//Save viewing matrix state
+    if (world == 1)
+    {
+        glTranslatef(walkX, -1, walkY);
+        glRotatef(lookY, 0, 1, 0);
+        glRotatef(lookX, 1, 0, 0);
+    }
+
+
+    //*******************Doll***********************
+    glPushMatrix();
+    glTranslatef(-1, 0, -6);
+
+
+
+    if (doll == 1)
+    {
+        glTranslatef(walkX, -1, walkY);
+        glRotatef(lookY, 0, 1, 0);
+        glRotatef(lookX, 1, 0, 0);
+    }
+    glColor3f(0.96, 0.88, 0.30);
+    eyerightSM();
+    eyeleftSM();
+    eyebrowleftSM();
+    eyebrowrightSM();
+    neckring();
+    legright();
+    legleft();
+    armleftS();
+    hatring();
+    armrightS();
+    BellyCoat();
+    bellyCoatbottom();
+    handleftS();
+    handrightS();
+    mouthSM();
+    teethSM();
+    glColor3f(1.0, 0.8, 0.6);
+    head();
+    footleft();
+    footright();
+    topbutton();
+    glColor3f(0, 1.0, 1.0);
+    pupilleftSM();
+    pupilrightSM();
+    glPopMatrix();
+
+    glPopMatrix();                                     //****Restore matrix state****
+    glutSwapBuffers();                             //****Flush drawing commands****
+}
+
+void mouthSL()
+{
+    glPushMatrix();
+    glTranslatef(0, .78, .74);
+    glScalef(.45, .45, .45);
+    glColor3f(0.0, 0.0, 0.0);
+    gluSphere(gluNewQuadric(), .4, 100, 100);
+    glPopMatrix();
+}
+void eyebrowleftSL()
+{
+    glPushMatrix();
+    glTranslatef(-.1, 1.32, .97);;
+    glRotatef(90, 0, 1, 0);
+    glRotatef(150, 1, 0, 0);
+    glColor3f(0.0, 0.0, 0.0);
+    gluCylinder(gluNewQuadric(), .05, .01, .3, 4, 6);
+    glPopMatrix();
+}
+void eyebrowrightSL()
+{
+    glPushMatrix();
+    glTranslatef(.13, 1.32, .97);
+    glRotatef(270, 0, 1, 0);
+    glRotatef(145, 1, 0, 0);
+    gluCylinder(gluNewQuadric(), .05, .01, .3, 4, 6);
+    glPopMatrix();
+}
+void pupilleftSL()
+{
+    glPushMatrix();
+    glTranslatef(-.17, 1.1, .88);
+    glScalef(.9, .2, .9);
+
+    gluSphere(gluNewQuadric(), .1, 100, 100);
+    glPopMatrix();
+}
+void tearleftSL()
+{
+    glPushMatrix();
+    glColor3f(0.0, 0.0, 1.0);
+    glTranslatef(-0.21, 1.1, 1.1);
+    glScalef(.15, .15, .15);
+    gluSphere(gluNewQuadric(), .1, 100, 100);
+    glPopMatrix();
+}
+void pupilrightSL()
+{
+    glPushMatrix();
+    glTranslatef(.17, 1.1, .88);
+    glScalef(.9, .2, .9);
+    gluSphere(gluNewQuadric(), .1, 100, 100);
+    glPopMatrix();
+}
+void tearrightSL()
+{
+    glPushMatrix();
+    glColor3f(0.0, 0.0, 1.0);
+    glTranslatef(.2, 1.1, 1.1);
+    glScalef(.15, .15, .15);
+    gluSphere(gluNewQuadric(), .1, 100, 100);
+    glPopMatrix();
+}
+void DisplaySL()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);//Clear the window
+    glColor3ub(50, 50, 150);//Change the draw color to slate blue
+    glPushMatrix();//Save viewing matrix state
+    if (world == 1)
+    {
+        glTranslatef(walkX, -1, walkY);
+        glRotatef(lookY, 0, 1, 0);
+        glRotatef(lookX, 1, 0, 0);
+    }
+    //*******************Doll***********************
+    glPushMatrix();
+    glTranslatef(-1, 0, -6);
+    if (doll == 1)
+    {
+        glTranslatef(walkX, -1, walkY);
+        glRotatef(lookY, 0, 1, 0);
+        glRotatef(lookX, 1, 0, 0);
+    }
+    glColor3f(1.0, 1.0, 1.0);
+    eyeright();
+    eyeleft();
+    eyebrowleftSL();
+    eyebrowrightSL();
+    neckring();
+    legright();
+    legleft();
+    armleftS();
+    armrightS();
+    BellyCoat();
+    bellyCoatbottom();
+    handleftS();
+    handrightS();
+
+    mouthSL();
+    teethS();
+    glColor3f(1.0, 0.8, 0.6);
+    head();
+    footleft();
+    footright();
+    topbutton();
+    glColor3f(0, 0, 0);
+    pupilleftSL();
+    pupilrightSL();
+    tearleftSL();
+    tearrightSL();
+    glPopMatrix();
+    glPopMatrix();                                    //****Restore matrix state****
+    glutSwapBuffers();                             //****Flush drawing commands****
+}
+void mouthA()
+{
+    glPushMatrix();
+    glTranslatef(0, .78, .74);
+    glRotatef(90, 0, 1, 0);
+    glRotatef(180, 1, 0, 0);
+    glScalef(.5, .05, .5);
+    glColor3f(0.0, 0.0, 0.0);
+    gluSphere(gluNewQuadric(), .4, 100, 100);
+    glPopMatrix();
+}
+void eyebrowleftA()
+{
+    glPushMatrix();
+    glTranslatef(-.3, 1.3, .97);;
+    glRotatef(90, 0, 1, 0);
+    glRotatef(45, 1, 0, 0);
+    glColor3f(0.0, 0.0, 0.0);
+    gluCylinder(gluNewQuadric(), .05, .01, .3, 4, 6);
+    glPopMatrix();
+}
+void eyebrowrightA()
+{
+    glPushMatrix();
+    glTranslatef(.3, 1.3, .97);
+    glRotatef(270, 0, 1, 0);
+    glRotatef(45, 1, 0, 0);
+    gluCylinder(gluNewQuadric(), .05, .01, .3, 4, 6);
+    glPopMatrix();
+}
+void DisplayAngry()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);//Clear the window
+    glColor3ub(50, 50, 150);//Change the draw color to slate blue
+    glPushMatrix();//Save viewing matrix state
+    if (world == 1)
+    {
+        glTranslatef(walkX, -1, walkY);
+        glRotatef(lookY, 0, 1, 0);
+        glRotatef(lookX, 1, 0, 0);
+    }
+    //*******************Doll***********************
+    glPushMatrix();
+    glTranslatef(-1, 0, -6);
+    if (doll == 1)
+    {
+        glTranslatef(walkX, -1, walkY);
+        glRotatef(lookY, 0, 1, 0);
+        glRotatef(lookX, 1, 0, 0);
+    }
+    glColor3f(1.0, 1.0, 0.0);
+    eyeright();
+    eyeleft();
+    glColor3f(0, 0, 0);
+    eyebrowleftA();
+    eyebrowrightA();
+    neckring();
+    legright();
+    legleft();
+    armleftS();
+    armrightS();
+    BellyCoat();
+    bellyCoatbottom();
+    handleftS();
+    handrightS();
+    mouthA();
+    glColor3f(.950, 0.57, 0.43);
+    head();
+    footleft();
+    footright();
+    topbutton();
+    hatring();
+    glColor3f(0, 0, 0);
+    pupilleft();
+    pupilright();
+    glPopMatrix();
+    glPopMatrix();                                     //****Restore matrix state****
+    glutSwapBuffers();                             //****Flush drawing commands****
+}
+
+void armleftS()
+{
+    glPushMatrix();
+    glTranslatef(-.80, 0.1, .1);     //Specify the position for the left arm
+    glRotatef(90, 0, 1, 0);
+    glRotatef(-50, 1, 0, 0);
+    glColor3f(1.0, 0.8, 0.6);
+    gluCylinder(gluNewQuadric(), .15, .15, .48, 30, 6);
+    glPopMatrix();
+}
+void armrightS()
+{
+    glPushMatrix();
+    glTranslatef(.80, 0.1, .1);      //Specify the position for the right arm
+    glRotatef(90, 0, 1, 0);
+    glRotatef(-130, 1, 0, 0);
+    glColor3f(1.0, 0.8, 0.6);
+    gluCylinder(gluNewQuadric(), .15, .15, .48, 30, 6);
+    glPopMatrix();
+}
+void handleftS()
+{
+    glPushMatrix();
+    glTranslatef(.82, 0.05, .15);     //Specify the position for the left hand
+    glScalef(.4, .3, .3);
+    glColor3f(0.0, 0.0, 0.0);
+    gluSphere(gluNewQuadric(), .4, 100, 100);
+    glPopMatrix();
+}
+void handrightS()
+{
+    glPushMatrix();
+    glTranslatef(-.82, 0.05, .20);    //Specify the position for the right hand
+    glScalef(.4, .3, .3);
+    glColor3f(0.0, 0.0, 0.0);
+    gluSphere(gluNewQuadric(), .4, 100, 100);
+    glPopMatrix();
+}
+void mouthS()
+{
+    glPushMatrix();
+    glTranslatef(0, .78, .74);
+    glScalef(.4, .1, .4);
+    glColor3f(0.0, 0.0, 0.0);
+    gluSphere(gluNewQuadric(), .4, 100, 100);
+    glPopMatrix();
+}
+void teethS()
+{
+    glPushMatrix();
+    glColor3f(1.0, 1.0, 1.0);
+    glTranslatef(-.08, .81, 1.0);
+    glTranslatef(.055, 0, .005);
+    glutSolidCube(.035);
+    glTranslatef(.055, 0, 0);
+    glutSolidCube(.035);
+    glPopMatrix();
+}
+void eyebrowleftS()
+{
+    glPushMatrix();
+    glTranslatef(-.1, 1.5, .97);;
+    glRotatef(90, 0, 1, 0);
+    glRotatef(150, 1, 0, 0);
+    glColor3f(0.0, 0.0, 0.0);
+    gluCylinder(gluNewQuadric(), .05, .01, .3, 4, 6);
+    glPopMatrix();
+}
+void eyebrowrightS()
+{
+    glPushMatrix();
+    glTranslatef(.1, 1.5, .97);
+    glRotatef(270, 0, 1, 0);
+    glRotatef(145, 1, 0, 0);
+    gluCylinder(gluNewQuadric(), .05, .01, .3, 4, 6);
+    glPopMatrix();
+}
+void tearleftS()
+{
+    glPushMatrix();
+    glColor3f(0.0, 0.0, 1.0);
+    glTranslatef(-.2, 0.9, .88);
+    glScalef(.3, .6, .6);
+    gluSphere(gluNewQuadric(), .1, 100, 100);
+    glPopMatrix();
+}
+void tearrightS()
+{
+    glPushMatrix();
+    glColor3f(0.0, 0.0, 1.0);
+    glTranslatef(.2, 0.9, .88);
+    glScalef(.3, .6, .6);
+    gluSphere(gluNewQuadric(), .1, 100, 100);
+    glPopMatrix();
+}
+void DisplaySad()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);//Clear the window
+    glColor3ub(50, 50, 150);//Change the draw color to slate blue
+    glPushMatrix();//Save viewing matrix state
+    if (world == 1)
+    {
+        glTranslatef(walkX, -1, walkY);
+        glRotatef(lookY, 0, 1, 0);
+        glRotatef(lookX, 1, 0, 0);
+    }
+    //*******************Doll***********************
+    glPushMatrix();
+    glTranslatef(-1, 0, -6);
+    if (doll == 1)
+    {
+        glTranslatef(walkX, -1, walkY);
+        glRotatef(lookY, 0, 1, 0);
+        glRotatef(lookX, 1, 0, 0);
+    }
+    glColor3f(1.0, 0.8, 0.88);
+    eyeright();
+    eyeleft();
+    eyebrowleftS();
+    eyebrowrightS();
+    neckring();
+    legright();
+    legleft();
+    armleftS();
+    armrightS();
+    BellyCoat();
+    bellyCoatbottom();
+    handrightS();
+    handleftS();
+
+    mouthS();
+    teethS();
+    glColor3f(1.0, 0.8, 0.6);
+    head();
+    footleft();
+    footright();
+    topbutton();
+    glColor3f(0, 0, 0);
+    pupilleft();
+    pupilright();
+    tearleftS();
+    tearrightS();
+    glPopMatrix();
+    glPopMatrix();                                     //****Restore matrix state****
+    glutSwapBuffers();                             //****Flush drawing commands****
+}
+void eyeright()
+{
+    //function for the right eye
+    glPushMatrix();
+    glTranslatef(.17, 1.1, .75);     //Specify the coordinates for the right eye
+    glRotatef(-45, 0, 0, 1);
+    glScalef(.9, .7, .7);            //Specify the size of the right eye
+         //Specify the color of the eye
+    gluSphere(gluNewQuadric(), .3, 100, 100);
+    glPopMatrix();
+}
+void eyeleft()
+{
+    glPushMatrix();
+    glTranslatef(-.17, 1.1, .75);     //Specify the position for the left eye
+    glRotatef(45, 0, 0, 1);
+    glScalef(.9, .7, .7);
+
+    gluSphere(gluNewQuadric(), .3, 100, 100);
+    glPopMatrix();
+}
+void legleft()
+{
+    glPushMatrix();
+    glTranslatef(.3, -.5, 0);     //Specify the position for the left leg
+    glRotatef(-90.0, 1, 0, 0);
+    glScalef(.8, .8, .8);
+    glColor3f(0.10, 0.46, 0.70);
+    gluCylinder(gluNewQuadric(), .5, .5, .5, 30, 6);
+    glPopMatrix();
+}
+void legright()
+{
+    glPushMatrix();
+    glTranslatef(-.3, -.5, 0);     //Specify the position for the right leg
+    glRotatef(-90.0, 1, 0, 0);
+    glScalef(.8, .8, .8);
+    glColor3f(0.10, 0.46, 0.70);
+    gluCylinder(gluNewQuadric(), .5, .5, .5, 30, 6);
+    glPopMatrix();
+}
+void armleft()
+{
+    glPushMatrix();
+    glTranslatef(-.82, 0.5, .25);     //Specify the position for the left arm
+    glRotatef(90, 0, 1, 0);
+    glRotatef(30, 1, 0, 0);
+    glColor3f(1.0, 0.8, 0.6);
+    gluCylinder(gluNewQuadric(), .15, .15, .48, 30, 6);
+    glPopMatrix();
+}
+void armright()
+{
+    glPushMatrix();
+    glTranslatef(.82, 0.5, .20);      //Specify the position for the right arm
+    glRotatef(90, 0, 1, 0);
+    glRotatef(-210, 1, 0, 0);
+    glColor3f(1.0, 0.8, 0.6);
+    gluCylinder(gluNewQuadric(), .15, .15, .48, 30, 6);
+    glPopMatrix();
+}
+void handleft()
+{
+    glPushMatrix();
+    glTranslatef(.82, 0.5, .20);     //Specify the position for the left hand
+    glScalef(.4, .3, .3);
+    glColor3f(0.0, 0.0, 0.0);
+    gluSphere(gluNewQuadric(), .4, 100, 100);
+    glPopMatrix();
+}
+void handright()
+{
+    glPushMatrix();
+    glTranslatef(-.82, 0.5, .25);    //Specify the position for the right hand
+    glScalef(.4, .3, .3);
+    glColor3f(0.0, 0.0, 0.0);
+    gluSphere(gluNewQuadric(), .4, 100, 100);
+    glPopMatrix();
+}
+void mouth()
+{
+    glPushMatrix();
+    glTranslatef(0, .85, .74);
+    glScalef(.56, .56, .08);
+    glColor3f(0.0, 0.0, 0.0);
+    gluSphere(gluNewQuadric(), .56, 100, 100);
+    glPopMatrix();
+}
+void teeth()
+{
+    glPushMatrix();
+    glColor3f(1.0, 1.0, 1.0);
+    glTranslatef(-.08, .72, .76);
+    glTranslatef(.055, 0, .005);
+    glutSolidCube(.045);
+    glTranslatef(.055, 0, 0);
+    glutSolidCube(.035);
+    glTranslatef(0, 0.55, .005);
+    //glSolidcube(0.85);
+    glPopMatrix();
+}
+void eyebrowleft()
+{
+    glPushMatrix();
+    glTranslatef(-.3, 1.5, .97);;
+    glRotatef(90, 0, 1, 0);
+    glRotatef(-45, 1, 0, 0);
+    glColor3f(0.0, 0.0, 0.0);
+    gluCylinder(gluNewQuadric(), .05, .01, .3, 4, 6);
+    glPopMatrix();
+}
+void eyebrowright()
+{
+    glPushMatrix();
+    glTranslatef(.3, 1.5, .97);
+    glRotatef(270, 0, 1, 0);
+    glRotatef(-45, 1, 0, 0);
+    gluCylinder(gluNewQuadric(), .05, .01, .3, 4, 6);
+    glPopMatrix();
+}
+void neckring()
+{
+    glPushMatrix();
+    glTranslatef(0, .5, 0);
+    glScalef(.59, .59, .59);
+    glColor3f(0.973, 0.898, 0.125);
+    glRotatef(90.0, 1, 0, 0);
+    glutSolidTorus(.1, 1.0, 20, 20);
+    glPopMatrix();
+}
+void head()
+{
+    glPushMatrix();
+    glTranslatef(0, 1.2, 0);
+    glScalef(.9, .9, .9);
+
+    gluSphere(gluNewQuadric(), 1, 100, 100);
+    glPopMatrix();
+}
+void hatring()
+{
+    glPushMatrix();
+    glTranslatef(0, 1.4, 0);
+    glScalef(.84, .84, .84);
+    glRotatef(90.0, -1.5, -1, 0);
+    glColor3f(0.0, 0.0, 0.0);
+    glutSolidCone(2.6, 1.1, 20, 40);
+    glutSolidTorus(.1, 1.0, 20, 20);
+    glPopMatrix();
+}
+void footleft()
+{
+    glPushMatrix();
+    glTranslatef(-.3, -.5, 0);
+    glScalef(1.5, .56, 1.5);
+    glColor3f(1.0, 0.0, 0.0);
+    gluSphere(gluNewQuadric(), .3, 100, 100);
+    glPopMatrix();
+}
+void footright()
+{
+    glPushMatrix();
+    glTranslatef(.3, -.5, 0);
+    glScalef(1.5, .56, 1.5);
+    glColor3f(0.0, 0.0, 0.0);
+    gluSphere(gluNewQuadric(), .3, 100, 100);
+    glPopMatrix();
+}
+void bellyCoatbottom()
+{
+    glPushMatrix();
+    glTranslatef(0, -.2, 0);
+    glScalef(1, .7, 1);
+    glColor3f(1.0, 0.0, 0.0);
+    glRotatef(90.0, 1, 0, 0);
+    gluDisk(gluNewQuadric(), 0, .8, 30, 30);
+    glPopMatrix();
+}
+void BellyCoat()
+{
+    glPushMatrix();
+    glTranslatef(0, .5, 0);
+    glScalef(0.9, .7, 0.9);
+    glRotatef(90.0, 1, 0, 0);
+    glColor3f(19 / 255, 136 / 255, 8 / 255);
+    gluCylinder(gluNewQuadric(), .6, .8, 1, 100, 100);
+    glPopMatrix();
+}
+void pupilleft()
+{
+    glPushMatrix();
+    glTranslatef(-.17, 1.1, .88);
+    glScalef(.9, .9, .9);
+    gluSphere(gluNewQuadric(), .1, 100, 100);
+    glPopMatrix();
+}
+void pupilright()
+{
+    glPushMatrix();
+    glTranslatef(.17, 1.1, .88);
+    glScalef(.9, .9, .9);
+    gluSphere(gluNewQuadric(), .1, 100, 100);
+    glPopMatrix();
+}
+void topbutton()
+{
+    glPushMatrix();
+    glTranslatef(.0, .4, .85);
+    glScalef(1.9, 1.9, 1.9);
+    gluSphere(gluNewQuadric(), .04, 100, 100);
+    glPopMatrix();
+}
+void Display()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);//Clear the window
+    glColor3ub(50, 50, 150);//Change the draw color to slate blue
+    glPushMatrix();//Save viewing matrix state
+    if (world == 1)
+    {
+        glTranslatef(walkX, -1, walkY);
+        glRotatef(lookY, 0, 1, 0);
+        glRotatef(lookX, 1, 0, 0);
+    }
+    //*******************Doll***********************
+    glPushMatrix();
+    glTranslatef(-1, 0, -6);
+    if (doll == 1)
+    {
+        glTranslatef(walkX, -1, walkY);
+        glRotatef(lookY, 0, 1, 0);
+        glRotatef(lookX, 1, 0, 0);
+    }
+    glColor3f(1.0, 1.0, 1.0);
+    eyeright();
+    eyeleft();
+    eyebrowleft();
+    eyebrowright();
+    neckring();
+    legright();
+    legleft();
+    armleft();
+    armright();
+    BellyCoat();
+    bellyCoatbottom();
+    hatring();
+    handleft();
+    handright();
+    mouth();
+    teeth();
+    glColor3f(1.0, 0.8, 0.6);
+    head();
+    footleft();
+    footright();
+    topbutton();
+    glColor3f(0.1, 0.1, 1.0);
+    pupilleft();
+    pupilright();
+    glPopMatrix();
+    glPopMatrix();                                     //****Restore matrix state****
+    glutSwapBuffers();                             //****Flush drawing commands****
+}
+void SetupRend()
+{
+    glClearColor(0.7, 0.7, 1.0, 1.0);
+    glEnable(GL_DEPTH_TEST);         //Enable depth testing
+    glEnable(GL_LIGHTING);             //Enable lighting
+    glLightfv(GL_LIGHT0, GL_AMBIENT, AmbientLight);//Set up and enable light zero
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, DiffuseLight);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, SpecularLight);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_COLOR_MATERIAL);                   //Enable color tracking
+    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);//Set material to follow
+    glMaterialfv(GL_FRONT, GL_SPECULAR, SpecRef);//Set specular reflectivity and shine
+    glMateriali(GL_FRONT, GL_SHININESS, Shine);
+}
+void walk(int key, int x, int y)                                      //change positions using arrow keys
+{
+    if (key == GLUT_KEY_UP)    walkY += 1;
+    if (key == GLUT_KEY_DOWN)  walkY -= 1;
+    if (key == GLUT_KEY_RIGHT) walkX += 1;
+    if (key == GLUT_KEY_LEFT)  walkX -= 1;
+}
+void myReshape(int w, int h)
+{
+    GLfloat Ratio;
+    glViewport(0, 0, w, h);
+    Ratio = 1.0 * w / h;
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(50.0, Ratio, VIEW_NEAR, VIEW_FAR);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glTranslatef(INIT_VIEW_X, INIT_VIEW_Y, INIT_VIEW_Z);
+    glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
+}
+
+void idle()
+{
+    glutPostRedisplay();
+}
+void Write1(const char* string)                                                //to write the string passed as parameter
+{
+    while (*string)
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *string++);
+}
+
+void Write2(const char* string)                                               //to write the string passed as parameter
+{
+    while (*string)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *string++);
+}
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT);                                         //clears the color buffer
+    //glColor3f (0.0,0.0,0.1);                                           //set the color
+    glBegin(GL_POLYGON);
+    glColor3f(0.388, 0.949, 0.918);                                                //to draw the polygon using the following coordinates
+    glVertex2f(1.0, -1.5);
+    glColor3f(0.388, 0.804, 0.949);
+    glVertex2f(-1.0, -1.5);
+    glColor3f(0.388, 0.592, 0.949);
+    glVertex2f(-1.0, 1.0);
+    glColor3f(0.102, 0.129, 0.78);
+    glVertex2f(1.0, 1.0);
+    glEnd();                                                                //to end drawing the polygon
+    GLUquadricObj* quadricObj;	    	                                    //Creates a quadratic object
+    quadricObj = gluNewQuadric();	                                     	//Sets a pointer to a new quadratic object
+    gluQuadricDrawStyle(quadricObj, GLU_FILL);
+    glPushMatrix();
+    glColor3f(0.55, 0.90, 0.40);                                               //Sets ellipse color
+    glTranslatef(0.0, 0.70, 0.0);
+    glRotatef(angle, 0.0, 0.0, 1.0);		                                   //Translates the ellipse
+    glScalef(0.30, 0.20, 0);                                            //Scales the ellipse
+    gluDisk(quadricObj, 0.0, 0.75, 100, 100);
+    glPopMatrix();
+    glColor3f(0, 0, 0);                                                //Sets ellipse color
+    glRasterPos2f(-0.088, 0.70);                                             //to provide position for rasterization
+    Write1("HAPPY");
+
+    glColor3f(0.790, 1.0, 0.70);		                                      //Sets ellipse color
+    glPushMatrix();
+    glTranslatef(-0.5, 0.25, 0.0);
+    glRotatef(angle, 0.0, 0.0, 1.0);	                                          //Translates the ellipse
+    glScalef(0.35, 0.20, 0.0);	    	                                  //Scales the ellipse
+    gluDisk(quadricObj, 0.0, 0.75, 100, 100);
+    glPopMatrix();
+    glColor3f(0, 0, 0);                                               //Sets ellipse color
+    glRasterPos2f(-0.55, 0.25);                                            //to provide position for rasterization
+    Write1("SAD");
+
+    glColor3f(0.55, 0.90, 0.40);                                               		                                  //Sets ellipse color
+    glPushMatrix();
+    glTranslatef(-0.35, -0.350, 0.0);
+    glRotatef(angle, 0.0, 0.0, 1.0);	                                          //Translates the ellipse
+    glScalef(0.35, 0.20, 0.0);     	                                  //Scales the ellipse
+    gluDisk(quadricObj, 0.0, 0.75, 100, 100);
+    glPopMatrix();
+    glColor3f(0, 0, 0);                                               //Sets ellipse color
+    glRasterPos2f(-0.42, -.350);                                            //to provide position for rasterization
+    Write1("ANGRY");
+
+    glColor3f(0.790, 1.0, 0.70);			                                  //Sets ellipse color
+    glPushMatrix();
+    glTranslatef(0.35, -0.350, 0.0);
+    glRotatef(angle, 0.0, 0.0, 1.0);	                                          //Translates the ellipse
+    glScalef(0.35, 0.20, 0.0);                                           //Scales the ellipse
+    gluDisk(quadricObj, 0.0, 0.75, 100, 100);
+    glPopMatrix();
+    glColor3f(0, 0, 0);                                                //Sets ellipse color
+    glRasterPos2f(0.27, -0.35);                                             //to provide position for rasterization
+    Write1("SLEEPY");
+
+    glColor3f(0.55, 0.90, 0.40);                                               		                                  			                                 //Sets ellipse color
+    glPushMatrix();
+    glTranslatef(0.5, 0.25, 0.0);
+    glRotatef(angle, 0.0, 0.0, 1.0);	                                           //Translates the ellipse
+    glScalef(0.35, 0.20, 0.0);    		                                   //Scales the ellipse
+    gluDisk(quadricObj, 0.0, 0.75, 100, 100);
+    glPopMatrix();
+    glColor3f(0, 0, 0);                                                //Sets ellipse color
+    glRasterPos2f(0.40, 0.25);                                             //to provide position for rasterization
+    Write1("SMIRKY");
+
+    glutSwapBuffers();
+    angle += 2.0;
+    i += 0.01;
+    glFlush();
+}
+void OnMouseClick(int button, int state, int x, int y)
+{
+
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)                //if left button of the mouse is pressed
+    {
+
+        if (x > 450 && x < 550 && y>55 && y < 150)                                       //if position of mouse lies between the first button coordinates
+        {
+            glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+            glutInitWindowSize(500, 700);
+            glutInitWindowPosition(850, 25);
+            glutCreateWindow("BWAHAHAHA!!");
+            glutReshapeFunc(myReshape);
+            glutDisplayFunc(Display);
+            glutIdleFunc(idle);
+            glutSpecialFunc(walk);
+            SetupRend();
+            glEnable(GL_NORMALIZE);
+            glutMainLoop();
+        }
+
+
+        if (x > 200 && x < 300 && y>200 && y < 300)                                       //if position of mouse lies between the first button coordinates
+        {
+            glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+            glutInitWindowSize(500, 700);
+            glutInitWindowPosition(850, 25);
+            glutCreateWindow("DONT CRY!!");
+            glutReshapeFunc(myReshape);
+            glutDisplayFunc(DisplaySad);
+            glutIdleFunc(idle);
+            glutSpecialFunc(walk);
+            SetupRend();
+            glEnable(GL_NORMALIZE);
+            glutMainLoop();
+        }
+
+        if (x > 300 && x < 400 && y>400 && y < 500)                                       //if position of mouse lies between the first button coordinates
+        {
+            glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+            glutInitWindowSize(500, 700);
+            glutInitWindowPosition(850, 25);
+            glutCreateWindow("ARGGG!!");
+            glutReshapeFunc(myReshape);
+            glutDisplayFunc(DisplayAngry);
+            glutIdleFunc(idle);
+            glutSpecialFunc(walk);
+            SetupRend();
+            glEnable(GL_NORMALIZE);
+            glutMainLoop();
+        }
+
+        if (x > 600 && x < 700 && y>400 && y < 500)                                       //if position of mouse lies between the first button coordinates
+        {
+            glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+            glutInitWindowSize(500, 700);
+            glutInitWindowPosition(850, 25);
+            glutCreateWindow("YAAWWWNN!!");
+            glutReshapeFunc(myReshape);
+            glutDisplayFunc(DisplaySL);
+            glutIdleFunc(idle);
+            glutSpecialFunc(walk);
+            SetupRend();
+            glEnable(GL_NORMALIZE);
+            glutMainLoop();
+        }
+
+        if (x > 700 && x < 800 && y>200 && y < 300)                                       //if position of mouse lies between the first button coordinates
+        {
+            glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+            glutInitWindowSize(500, 700);
+            glutInitWindowPosition(850, 25);
+            glutCreateWindow("HOW YOU DOIN??");
+            glutReshapeFunc(myReshape);
+            glutDisplayFunc(DisplaySM);
+            glutIdleFunc(idle);
+            glutSpecialFunc(walk);
+            SetupRend();
+            glEnable(GL_NORMALIZE);
+            glutMainLoop();
+        }
+    }
+}
+void myinit()
+{
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glMatrixMode(GL_PROJECTION);
+    gluOrtho2D(0, 1000, 0, 1000);
+    glMatrixMode(GL_MODELVIEW);
+}
+void Write12(const char* string)
+{
+    while (*string)
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *string++);
+}
+void Write22(const char* string)
+{
+    while (*string)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *string++);
+}
+void displayfront()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBegin(GL_POLYGON);
+    glColor3f(0.957, 0.686, 0.165);
+    glVertex2f(0, 0);
+    glColor3f(0.55, 0.992, 0.992);
+    glVertex2f(1000, 0);
+    glColor3f(0.31, 1.00, 0.30);
+    glVertex2f(1000, 1000);
+    glColor3f(0.608, 0.992, 0.992);
+    glVertex2f(0, 1000);
+    glEnd();
+
+    glColor3f(0.25, 0.25, 0.25);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(10, 10);
+    glVertex2f(10, 990);
+    glVertex2f(990, 990);
+    glVertex2f(990, 10);
+    glEnd();
+
+    glColor3f(0.80, 0.10, 0.10);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(20, 20);
+    glVertex2f(20, 980);
+    glVertex2f(980, 980);
+    glVertex2f(980, 20);
+    glEnd();
+
+    glColor3f(0, 0.2, 0.4);
+    glRasterPos2f(320, 775);
+    Write12("CG MINI PROJECT WITH OPENGL");
+    glColor3f(0, 0.2, 0.4);
+    glRasterPos2f(455, 700);
+    Write12("EXPRESSO");
+    glBegin(GL_LINES);
+    glVertex2f(310, 774);
+    glVertex2f(710, 774);
+    glEnd();
+    glBegin(GL_LINES);
+    glVertex2f(450, 700);
+    glVertex2f(580, 700);
+    glEnd();
+    glColor3f(1.0, 0.0, 0.0);
+    glRasterPos2f(430, 340);
+    Write12("ENTER!!!");
+
+    glPushMatrix();
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.30, 0.20, 0.0);
+    glVertex2f(100, 280);
+    glVertex2f(30, 180);
+    glVertex2f(170, 180);
+    glEnd();
+    glPopMatrix();
+
+    glPushMatrix();
+    glBegin(GL_POLYGON);
+    glColor3f(0.63, 0.792, 0.878);
+    glVertex2f(40, 180);
+    glVertex2f(160, 180);
+    glVertex2f(160, 100);
+    glVertex2f(40, 100);
+    glEnd();
+    glPopMatrix();
+
+    glPushMatrix();
+    glBegin(GL_POLYGON);
+    glColor3f(0.0, 0.0, 0.0);
+    glVertex2f(65, 160);
+    glVertex2f(75, 160);
+    glVertex2f(75, 150);
+    glVertex2f(65, 150);
+    glEnd();
+    glPopMatrix();
+
+    glPushMatrix();
+    glBegin(GL_POLYGON);
+    glColor3f(0.0, 0.0, 0.0);
+    glVertex2f(135, 160);
+    glVertex2f(125, 160);
+    glVertex2f(125, 150);
+    glVertex2f(135, 150);
+    glEnd();
+    glPopMatrix();
+
+    glPushMatrix();
+    glBegin(GL_POLYGON);
+    glColor3f(0.0, 0.0, 0.0);
+    glVertex2f(90, 130);
+    glVertex2f(110, 130);
+    glVertex2f(110, 100);
+    glVertex2f(90, 100);
+    glEnd();
+    glPopMatrix();
+
+    glPushMatrix();
+    glBegin(GL_POLYGON);
+    glColor3f(0.70, 0.50, 0.10);
+    glVertex2f(22, 99);
+    glColor3f(0.60, 0.40, 0.0);
+    glVertex2f(978, 99);
+    glVertex2f(978, 22);
+    glColor3f(0.70, 0.50, 0.10);
+    glVertex2f(22, 22);
+    glEnd();
+    glPopMatrix();
+
+    for (float i = 0; i < 70; i += 2)
+    {
+        glColor3f(0.25, 0.25, 0.25);
+        glBegin(GL_LINE_LOOP);
+        glVertex2f(400 - i, 400 + i);
+        glVertex2f(550 + i, 400 + i);
+        glVertex2f(550 + i, 300 - i);
+        glVertex2f(400 - i, 300 - i);
+        glEnd();
+    }
+    glFlush();
+}
+void OnMouseClick1(int button, int state, int x, int y)
+{
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    {
+
+        if (x > 400 && x < 500 && y>400 && y < 500)
+        {
+            glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+            glutInitWindowSize(1000, 700);
+            glutInitWindowPosition(150, 0);
+            glutCreateWindow("PROJECT MENU CHART");
+            glutIdleFunc(idle);
+            glutDisplayFunc(display);
+            glutMouseFunc(OnMouseClick);
+            glutMainLoop();
+        }
+    }
+}
+int main(int argc, char** argv)
+{
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitWindowSize(1000, 700);
+    glutInitWindowPosition(150, 0);
+    glutCreateWindow("WELCOME");
+    glutDisplayFunc(displayfront);
+    glutMouseFunc(OnMouseClick1);
+    myinit();
+    glutMainLoop();
+    return 0;
+}
